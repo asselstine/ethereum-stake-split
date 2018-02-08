@@ -19,11 +19,11 @@ contract Operator {
   uint public casperDeposit;
   uint public casperWithdrawal;
 
+  mapping(address => Stake) ownerToStakes;
+  address[] owners;
+
   event OperatorReady(address validatorAddress);
   event Transfer(address userAddress, uint amount, uint percentage, uint whatever);
-
-  Operator operator;
-  mapping(address => Stake) ownerToStakes;
 
   function Operator(address _validatorAddress, address _withdrawalAddress) public {
     validatorAddress = _validatorAddress;
@@ -91,7 +91,6 @@ contract Operator {
   }
 
   function validatorWithdrawal() internal pure {
-
   }
 
   function stakerWithdrawal() internal {
@@ -103,15 +102,12 @@ contract Operator {
       uint remainingStakeWithdrawal = stakeWithdrawal - stake.withdrawal;
       casperWithdrawal -= remainingStakeWithdrawal;
       stake.withdrawal += remainingStakeWithdrawal;
-      Transfer( msg.sender,
-                remainingStakeWithdrawal,
-                stakePercentOfTotal,
-                stake.withdrawal);
       msg.sender.transfer(remainingStakeWithdrawal);
     } else {
+      uint withdrawal = stake.deposit;
       totalDeposits -= stake.deposit;
       stake.deposit = 0;
-      msg.sender.transfer(stake.deposit);
+      msg.sender.transfer(withdrawal);
     }
   }
 

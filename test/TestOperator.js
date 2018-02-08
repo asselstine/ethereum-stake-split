@@ -77,7 +77,7 @@ contract('Operator', function (accounts) {
 
   describe('withdraw()', function () {
     describe('stakerWithdrawal()', function () {
-      it('should remove the stake when active', async function () {
+      it('should remove the stake and interest when active', async function () {
         let initialBalance = web3.eth.getBalance(userAddress)
         await op.deposit({ from: validatorAddress, value: 100 })
         await op.deposit({ from: userAddress, value: 100 })
@@ -89,6 +89,20 @@ contract('Operator', function (accounts) {
           initialBalance.plus(5).mod(100000).toString()
         )
       })
+
+      it('should return the deposit if not active', async function () {
+        let initialBalance = web3.eth.getBalance(userAddress)
+        await op.deposit({ from: validatorAddress, value: 100 })
+        await op.deposit({ from: userAddress, value: 90 })
+        await op.withdraw({ from: userAddress })
+        assert.equal(
+          web3.eth.getBalance(userAddress).mod(100000).toString(),
+          initialBalance.mod(100000).toString()
+        )
+      })
+    })
+
+    describe('validatorWithdrawal', function () {
     })
   })
 })

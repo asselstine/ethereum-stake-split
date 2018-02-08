@@ -1,2 +1,2 @@
 #! /bin/sh
-watchman-make -p 'contracts/**' 'test/**' --make=truffle -t test
+watchman-make -p 'app/**' 'contracts/**' 'test/**' --make=truffle -t 'compile && truffle test'

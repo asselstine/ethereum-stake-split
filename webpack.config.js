@@ -10,7 +10,7 @@ module.exports = {
   plugins: [
     // Copy our app's index.html to the build folder.
     new CopyWebpackPlugin([
-      { from: './app/index.html', to: "index.html" }
+      { from: './app/*.html', flatten: true }
     ])
   ],
   module: {
@@ -18,19 +18,24 @@ module.exports = {
       {
        test: /\.css$/,
        use: [ 'style-loader', 'css-loader' ]
-      }
-    ],
-    loaders: [
+      },
       { test: /\.json$/, use: 'json-loader' },
       {
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015'],
-          plugins: ['transform-runtime']
-        }
-      }
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: 'babel-loader'
+      },
     ]
+  },
+  resolve: {
+    extensions: ['.css', '.js', '.jsx'],
+  },
+  devServer: {
+    historyApiFallback: true
   }
 }
+
+
+// query: {
+//   plugins: ['transform-runtime']
+// }
