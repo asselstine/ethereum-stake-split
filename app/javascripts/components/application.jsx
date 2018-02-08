@@ -1,7 +1,8 @@
 import React from 'react'
 import {
   Route,
-  Redirect
+  Redirect,
+  Switch
 } from 'react-router-dom'
 
 import { Operator } from './operator'
@@ -14,15 +15,18 @@ export const Application = () => {
         <div className="hero-body">
           <div className="container">
             <h1 className="title">
-              <Route path='/' component={() => 'Polystake'} />
-              <Route path='/operator' component={() => ': Operator'} />
+              <Switch>
+                <Route path='/operator' component={() => 'Operator'} />
+                <Route path='/' component={() => 'Polystake'} />
+              </Switch>
             </h1>
           </div>
         </div>
       </section>
-      <Route path='/login' component={Login} />
-      <Route path='/operator' component={Operator} />
-      <Redirect from='/' to='/login' />
+      <Switch>
+        <Route path='/operator' component={Operator} />
+        <Route path='/' component={Login} />
+      </Switch>
     </div>
   )
 }
