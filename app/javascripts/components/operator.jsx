@@ -26,17 +26,13 @@ export class Operator extends Component {
   render () {
     return (
       <div>
-        <section className='hero is-primary is-bold'>
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title">
-                Operator
-              </h1>
-              <a href='/' className='button is-inverted is-primary is-outlined'>Back</a>
-            </div>
+        <section className='section'>
+          <div className='container'>
+            <h1 className="title">
+              Operator
+            </h1>
           </div>
         </section>
-
         <section className='section'>
           <div className='container'>
             <h1 className='title'>New Contract</h1>

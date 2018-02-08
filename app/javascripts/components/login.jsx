@@ -2,7 +2,7 @@ import React from 'react'
 
 import {
   Link
-} from 'react-router'
+} from 'react-router-dom'
 
 export const Login = () => {
   return (
@@ -15,7 +15,7 @@ export const Login = () => {
                 <article className='tile is-child notification is-primary'>
                   <h2 className='title'>Operator</h2>
                   <h3 className='subtitle'>If you'd like to earn money by managing a Casper validator</h3>
-                  <a className='button is-primary is-inverted is-outlined' href='/operator.html'>Continue</a>
+                  <Link className='button is-primary is-inverted is-outlined' to='/operator'>Continue</Link>
                 </article>
               </div>
               <div className='tile is-parent'>
