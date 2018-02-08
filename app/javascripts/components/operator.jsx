@@ -20,7 +20,6 @@ export class Operator extends Component {
 
   submitNewContract (event) {
     event.preventDefault()
-
   }
 
   render () {
