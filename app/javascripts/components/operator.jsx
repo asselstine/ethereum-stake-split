@@ -15,7 +15,7 @@ export class Operator extends Component {
     }
   }
   componentDidMount () {
-    var account = web3.eth.accounts[0]
+    // var account = web3.eth.accounts[0]
   }
 
   submitNewContract (event) {
