@@ -1,5 +1,5 @@
-import operators from './operator-reducer'
+import validators from './validator-reducer'
 
 export default {
-  operators
+  validators
 }

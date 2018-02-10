@@ -4,22 +4,21 @@ import React, {
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { NewOperatorForm } from './new-operator-form'
-import operatorContract from '../../../contracts/operator-contract'
+import { NewValidatorForm } from './new-validator-form'
 import polystakeContract from '../../../contracts/polystake-contract'
 import { connect } from 'react-redux'
-import retrieveOperators from '../../../services/retrieve-operators'
-import { OperatorRow } from './operator-row'
+import retrieveValidators from '../../../services/retrieve-validators'
+import { ValidatorRow } from './validator-row'
 
-export const OperatorList = connect(
+export const ValidatorList = connect(
   (state, ownProps) => {
     return {
-      operatorAddresses: _.get(state, 'operators.addresses') || []
+      validatorAddresses: _.get(state, 'validators.addresses') || []
     }
   }
 )(class extends Component {
   componentDidMount () {
-    retrieveOperators()
+    retrieveValidators()
   }
 
   render () {
@@ -28,14 +27,14 @@ export const OperatorList = connect(
         <section className='section'>
           <div className='container'>
             <h1 className="title">
-              Operator
+              Validator
             </h1>
           </div>
         </section>
         <section className='section'>
           <div className='container'>
             <h1 className='title'>New Contract</h1>
-            <NewOperatorForm />
+            <NewValidatorForm />
           </div>
         </section>
         <section className='section'>
@@ -43,7 +42,7 @@ export const OperatorList = connect(
             <table className='table'>
               <tbody>
                 {
-                  this.props.operatorAddresses.map(address => <OperatorRow address={address} key={address} />)
+                  this.props.validatorAddresses.map(address => <ValidatorRow address={address} key={address} />)
                 }
               </tbody>
             </table>
@@ -54,10 +53,10 @@ export const OperatorList = connect(
   }
 })
 
-OperatorList.propTypes = {
-  operatorAddresses: PropTypes.array.isRequired
+ValidatorList.propTypes = {
+  validatorAddresses: PropTypes.array.isRequired
 }
 
-OperatorList.defaultProps = {
-  operatorAddresses: []
+ValidatorList.defaultProps = {
+  validatorAddresses: []
 }

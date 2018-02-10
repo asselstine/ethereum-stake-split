@@ -3,7 +3,7 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 
-export class OperatorRow extends Component {
+export class ValidatorRow extends Component {
   render () {
     return (
       <tr>
@@ -13,6 +13,6 @@ export class OperatorRow extends Component {
   }
 }
 
-OperatorRow.propTypes = {
+ValidatorRow.propTypes = {
   address: PropTypes.any.isRequired
 }

@@ -4,23 +4,23 @@ import React, {
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
-import operatorContract from '../../../contracts/operator-contract'
 import polystakeContract from '../../../contracts/polystake-contract'
 
-export class NewOperatorForm extends Component {
+export class NewValidatorForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      validatorAddress: '0x89a40de21210e700492bd5bf99cc305b9ac8ab52',
-      withdrawalAddress: '0x89a40de21210e700492bd5bf99cc305b9ac8ab52',
+      withdrawalAddress: '',
     }
     this.submitNewContract = this.submitNewContract.bind(this)
   }
 
   submitNewContract (event) {
     event.preventDefault()
+    var sender = window.web3.eth.accounts[0]
+    var withdrawalAddress = this.state.withdrawalAddress || sender
     polystakeContract().deployed().then((instance) => {
-      instance.createOperator(this.state.validatorAddress, this.state.withdrawalAddress, { from: window.web3.eth.accounts[0]})
+      instance.newValidator(withdrawalAddress, { from: sender })
     })
   }
 
@@ -33,11 +33,9 @@ export class NewOperatorForm extends Component {
             <input
               className="input"
               type='text'
-              placeholder='0x89a40de21210e700492bd5bf99cc305b9ac8ab52'
-              pattern="0x[A-Fa-f0-9]{40}"
               required
-              value={this.state.validatorAddress}
-              onChange={(e) => this.setState({validatorAddress: e.target.value})} />
+              readOnly
+              value={window.web3.eth.accounts[0]} />
           </div>
         </div>
         <div className='field'>
@@ -46,9 +44,8 @@ export class NewOperatorForm extends Component {
             <input
               className='input'
               type='text'
-              placeholder='0x89a40de21210e700492bd5bf99cc305b9ac8ab52'
+              placeholder={window.web3.eth.accounts[0]}
               pattern="0x[A-Fa-f0-9]{40}"
-              required
               value={this.state.withdrawalAddress}
               onChange={(e) => this.setState({withdrawalAddress: e.target.value})} />
           </div>

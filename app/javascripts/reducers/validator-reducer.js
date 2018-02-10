@@ -6,7 +6,7 @@ export default function (state, action) {
   }
 
   switch (action.type) {
-    case 'RECEIVE_OPERATOR_ADDRESSES':
+    case 'RECEIVE_VALIDATOR_ADDRESSES':
       state = update(state, {
         addresses: {
           $set: action.addresses
