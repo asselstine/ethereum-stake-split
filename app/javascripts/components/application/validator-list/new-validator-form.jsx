@@ -10,6 +10,7 @@ export class NewValidatorForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      validatorAddress: window.web3.eth.accounts[0],
       withdrawalAddress: '',
     }
     this.submitNewContract = this.submitNewContract.bind(this)
@@ -34,8 +35,8 @@ export class NewValidatorForm extends Component {
               className="input"
               type='text'
               required
-              readOnly
-              value={window.web3.eth.accounts[0]} />
+              value={this.state.validatorAddress}
+              onChange={(e) => this.setState({validatorAddress: e.target.value})} />
           </div>
         </div>
         <div className='field'>

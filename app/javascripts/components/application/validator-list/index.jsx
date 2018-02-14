@@ -7,18 +7,18 @@ import _ from 'lodash'
 import { NewValidatorForm } from './new-validator-form'
 import polystakeContract from '../../../contracts/polystake-contract'
 import { connect } from 'react-redux'
-import retrieveValidators from '../../../services/retrieve-validators'
+import retrieveValidatorCount from '../../../services/retrieve-validator-count'
 import { ValidatorRow } from './validator-row'
 
 export const ValidatorList = connect(
   (state, ownProps) => {
     return {
-      validatorAddresses: _.get(state, 'validators.addresses') || []
+      validatorCount: _.get(state, 'validators.count') || []
     }
   }
 )(class extends Component {
   componentDidMount () {
-    retrieveValidators()
+    retrieveValidatorCount()
   }
 
   render () {
@@ -40,9 +40,18 @@ export const ValidatorList = connect(
         <section className='section'>
           <div className='container'>
             <table className='table'>
+              <thead>
+                <tr>
+                  <th>Validator Address</th>
+                  <th>Withdrawal Address</th>
+                  <th>Validator Deposit</th>
+                  <th>Total Deposits</th>
+                  <th>Stage</th>
+                </tr>
+              </thead>
               <tbody>
                 {
-                  this.props.validatorAddresses.map(address => <ValidatorRow address={address} key={address} />)
+                  _.range(this.props.validatorCount).map(index => <ValidatorRow index={index} key={index} />)
                 }
               </tbody>
             </table>
@@ -54,9 +63,9 @@ export const ValidatorList = connect(
 })
 
 ValidatorList.propTypes = {
-  validatorAddresses: PropTypes.array.isRequired
+  validatorCount: PropTypes.number.isRequired
 }
 
 ValidatorList.defaultProps = {
-  validatorAddresses: []
+  validatorCount: 0
 }

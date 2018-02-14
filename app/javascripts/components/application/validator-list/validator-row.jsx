@@ -1,18 +1,46 @@
 import React, {
   Component
 } from 'react'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
+import retrieveValidator from '../../../services/retrieve-validator'
+import { connect } from 'react-redux'
+import { Address } from '../../address'
+import { Stage } from '../../stage'
 
-export class ValidatorRow extends Component {
-  render () {
-    return (
-      <tr>
-        <td>{this.props.address.toString()}</td>
-      </tr>
-    )
+export const ValidatorRow = connect(
+  (state, ownProps) => {
+    return {
+      validator: _.get(state, `validators.validators[${ownProps.index}]`)
+    }
   }
-}
+)(class extends Component {
+  componentDidMount () {
+    retrieveValidator(this.props.index)
+  }
+
+  render () {
+    if (this.props.validator) {
+      var validator = this.props.validator
+      var tr =
+        <tr>
+          <td><Address address={validator.validatorAddress} /></td>
+          <td><Address address={validator.withdrawalAddress} /></td>
+          <td>{validator.deposit.toString()}</td>
+          <td>{validator.totalDeposits.toString()}</td>
+          <td><Stage stage={validator.stage} /></td>
+        </tr>
+    } else {
+      tr =
+        <tr>
+          <td>{this.props.index.toString()}</td>
+        </tr>
+    }
+    return tr
+  }
+})
 
 ValidatorRow.propTypes = {
-  address: PropTypes.any.isRequired
+  index: PropTypes.any.isRequired,
+  validator: PropTypes.object
 }
