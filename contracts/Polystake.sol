@@ -38,6 +38,9 @@ contract Polystake {
   mapping(address => Stake) ownerToStakes;
   mapping(address => bool) validatorExists;
 
+  event Deposited(address indexed owner, uint256 indexed validatorIndex, uint256 amount);
+  event Withdrawn(address indexed owner, uint256 indexed validatorIndex, uint256 amount);
+
   event ReadyToActivate(uint validatorIndex);
   event NewValidator(uint indexed validatorIndex, address indexed validatorAddress);
 
@@ -163,6 +166,7 @@ contract Polystake {
     if (validator.totalDeposits >= validator.deposit) {
       ReadyToActivate(_validatorIndex);
     }
+    Deposited(msg.sender, _validatorIndex, msg.value);
   }
 
   function validatorWithdrawal(uint _validatorIndex) internal pure {
@@ -172,19 +176,20 @@ contract Polystake {
     Validator storage validator = validators[_validatorIndex];
     Stake storage stake = ownerToStakes[msg.sender];
     require(stake.validatorIndex == _validatorIndex);
+    uint withdrawal;
     if (validator.stage == Stages.LoggedOut) {
       uint stakePercentOfTotal = percent(stake.deposit, validator.casperDeposit, 6);
       uint stakeWithdrawal = (validator.casperWithdrawal * stakePercentOfTotal) / 10 ** 6;
-      uint remainingStakeWithdrawal = stakeWithdrawal - stake.withdrawal;
-      validator.casperWithdrawal -= remainingStakeWithdrawal;
-      stake.withdrawal += remainingStakeWithdrawal;
-      msg.sender.transfer(remainingStakeWithdrawal);
+      withdrawal = stakeWithdrawal - stake.withdrawal;
+      validator.casperWithdrawal -= withdrawal;
+      stake.withdrawal += withdrawal;
     } else if (validator.stage == Stages.AcceptingDeposits) {
-      uint withdrawal = stake.deposit;
+      withdrawal = stake.deposit;
       validator.totalDeposits -= stake.deposit;
       stake.deposit = 0;
-      msg.sender.transfer(withdrawal);
     }
+    Withdrawn(msg.sender, _validatorIndex, withdrawal);
+    msg.sender.transfer(withdrawal);
   }
 
   function percentageOf(uint _deposit, uint _percent) internal pure returns (uint) {

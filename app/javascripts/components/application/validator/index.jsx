@@ -11,8 +11,12 @@ import { Modal } from '../../modal'
 import { Address } from '../../address'
 import { Ether } from '../../ether'
 import { Loading } from '../../loading'
+import { EventRow } from './event-row'
 import validatorDeposit from '../../../services/validator-deposit'
 import validatorWithdrawal from '../../../services/validator-withdrawal'
+
+import update from 'immutability-helper'
+import polystakeContract from '../../../contracts/polystake-contract'
 
 export const Validator = connect(
   (state, ownProps) => {
@@ -26,13 +30,62 @@ export const Validator = connect(
     this.state = {
       showDeposit: false,
       showWithdraw: false,
-      deposit: 0
+      deposit: 0,
+      events: []
     }
     this.onDeposit = this.onDeposit.bind(this)
     this.onWithdraw = this.onWithdraw.bind(this)
   }
+
+  sortEvents (events) {
+    events.sort((a, b) => {
+      if (a.blockNumber > b.blockNumber) {
+        return -1;
+      } else if (a.blockNumber == b.blockNumber) {
+        return 0;
+      } else {
+        return 1;
+      }
+    })
+  }
+
   componentDidMount () {
     retrieveValidator(this.props.match.params.index)
+    polystakeContract().deployed().then(instance => {
+      var eventFilters = {
+        owner: web3.eth.accounts[0],
+        validatorIndex: this.props.match.params.index
+      }
+      var additionalFilters = {
+        fromBlock: 0,
+        toBlock: 'latest'
+      }
+      this.deposited = instance.Deposited(eventFilters, additionalFilters)
+      this.deposited.watch((error, result) => {
+        if (error) {
+          console.error(error)
+        } else {
+          var events = update(this.state.events, { $push: [result] })
+          this.sortEvents(events)
+          this.setState({events: events})
+        }
+      })
+      this.withdrawn = instance.Withdrawn(eventFilters, additionalFilters)
+      this.withdrawn.watch((error, result) => {
+        if (error) {
+          console.error(error)
+        } else {
+          var events = update(this.state.events, { $push: [result] })
+          this.sortEvents(events)
+          this.setState({events: events})
+        }
+      })
+    })
+  }
+
+  componentWillUnmount () {
+    this.deposited.stopWatching()
+    this.withdrawn.stopWatching()
   }
 
   onDeposit () {
@@ -120,6 +173,21 @@ export const Validator = connect(
 
           <a href='javascript:;' className='button is-success' onClick={(e) => this.onDeposit()}>Deposit</a>
           <a href='javascript:;' className='button is-warning' onClick={(e) => this.onWithdraw()}>Withdraw</a>
+
+          <table className='table is-striped'>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.events.map((event) =>
+                <EventRow event={event} key={`${event.blockNumber}-${event.logIndex}`} />
+              )}
+            </tbody>
+          </table>
         </div>
     } else {
       validatorLabel = 'Validator'
