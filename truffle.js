@@ -12,7 +12,7 @@ var mnemonic = process.env.HDWALLET_MNEMONIC
 module.exports = {
   networks: {
     ropsten: {
-      provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/8v2jyVAmUDLe0O6MhivL'),
+      provider: new HDWalletProvider(mnemonic, process.env.ROPSTEN_PROVIDER_URL),
       network_id: 3
     },
 

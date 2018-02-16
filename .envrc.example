@@ -1,2 +1,3 @@
 # For use by the direnv utility
-HDWALLET_MNEMONIC=12 words...
+export HDWALLET_MNEMONIC="<12 WORDS>"
+export ROPSTEN_PROVIDER_URL='https://ropsten.infura.io/<YOUR_KEY_HERE>'
