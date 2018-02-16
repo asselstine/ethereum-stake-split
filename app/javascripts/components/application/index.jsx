@@ -5,6 +5,7 @@ import {
   Switch
 } from 'react-router-dom'
 
+import { Validator } from './validator'
 import { ValidatorList } from './validator-list'
 import { Login } from './login'
 
@@ -17,6 +18,7 @@ export const Application = () => {
             <div className="container">
               <h1 className="title">
                 <Switch>
+                  <Route path='/validator/:index' component={() => 'Validator'} />
                   <Route path='/validator' component={() => 'Validators'} />
                   <Route path='/' component={() => 'Polystake'} />
                 </Switch>
@@ -25,6 +27,7 @@ export const Application = () => {
           </div>
         </section>
         <Switch>
+          <Route path='/validator/:index' component={Validator} />
           <Route path='/validator' component={ValidatorList} />
           <Route path='/' component={Login} />
         </Switch>

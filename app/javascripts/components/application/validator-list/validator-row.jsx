@@ -8,6 +8,8 @@ import { connect } from 'react-redux'
 import { Address } from '../../address'
 import { Ether } from '../../ether'
 import { Stage } from '../../stage'
+import classNames from 'classnames'
+import { Link } from 'react-router-dom'
 
 export const ValidatorRow = connect(
   (state, ownProps) => {
@@ -25,16 +27,11 @@ export const ValidatorRow = connect(
       var validator = this.props.validator
       var tr =
         <tr>
-          <td><Address address={validator.validatorAddress} /></td>
+          <td><Link to={`/validator/${this.props.index}`}><Address address={validator.validatorAddress} /></Link></td>
           <td><Address address={validator.withdrawalAddress} /></td>
           <td><Ether wei={validator.deposit} /></td>
           <td><Ether wei={validator.totalDeposits} /></td>
           <td><Stage stage={validator.stage} /></td>
-          <td>
-            <a href='javascript:;' className='button is-success' onClick={(e) => this.props.onDeposit(this.props.index, this.props.validator)}>Deposit</a>
-            &nbsp;
-            <a href='javascript:;' className='button is-warning' onClick={(e) => this.props.onWithdraw(this.props.index, this.props.validator)}>Withdraw</a>
-          </td>
         </tr>
     } else {
       tr =
@@ -48,7 +45,5 @@ export const ValidatorRow = connect(
 
 ValidatorRow.propTypes = {
   index: PropTypes.any.isRequired,
-  validator: PropTypes.object,
-  onDeposit: PropTypes.func.isRequired,
-  onWithdraw: PropTypes.func.isRequired
+  validator: PropTypes.object
 }
