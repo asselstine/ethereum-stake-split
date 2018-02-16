@@ -13,7 +13,8 @@ module.exports = {
   networks: {
     ropsten: {
       provider: new HDWalletProvider(mnemonic, process.env.ROPSTEN_PROVIDER_URL),
-      network_id: 3
+      network_id: 3,
+      gas: 4612388
     },
 
     development: {
