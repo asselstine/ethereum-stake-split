@@ -45,6 +45,7 @@
   "dependencies": {
     "bulma": "^0.6.2",
     "classnames": "^2.2.5",
+    "ganache-cli": "^6.0.3",
     "immutability-helper": "^2.6.4",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
